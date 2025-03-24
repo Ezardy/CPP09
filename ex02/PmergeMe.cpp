@@ -19,7 +19,7 @@ static void pmergeme_recursive(std::vector<unsigned>& v, unsigned track) {
 	std::size_t b_len = v.size() / track;
 	if (b_len > 1)
 		pmergeme_recursive(v, track);
-	b_len += (v.size() % track) != 0;
+	b_len += v.size() % track / (track / 2);
 	if (b_len > 1)
 		insertion(v, track, b_len);
 }
@@ -42,8 +42,10 @@ static void insertion(std::vector<unsigned>& v, unsigned track, std::size_t b_le
 		if (t > b_len)
 			t = b_len;
 		std::size_t alb = 0;
+		std::size_t lblb = blb;
 		for (std::size_t tb = t - 1; tb >= lb; tb -= 1)
-			binary_insertion(v, track, tb - lb, blb, alb);
+			binary_insertion(v, track, tb - lb, lblb, alb);
+		blb += (alb + lblb - blb) * 2;
 	}
 }
 
@@ -57,18 +59,17 @@ static void binary_insertion(std::vector<unsigned>& v, unsigned track, std::size
 	if (itb_e > v.end())
 		itb_e = v.end();
 	std::size_t min_d = 0;
-	std::size_t max_d = dtlb ? blb + alb : blb - 1;
-	// std::size_t max_d = dtlb ? blb + alb - 1 : blb - 1;
-	bool gt;
-	bool same = false;
+	std::size_t max_d = dtlb ? blb + alb : blb - 1;	 // bug (may be alb is extra)
+	bool		gt;
+	bool		same = false;
 	while (min_d != max_d) {
 		std::size_t		d = (min_d + max_d) / 2;
 		unsigned const& dv = v[(d + (d >= blb) + 1) * old_track - 1];
 		if (val <= dv)
-			if (!d) {
+			if (d == min_d) {
 				same = true;
 				gt = false;
-				max_d = 0;
+				max_d = min_d;
 			} else
 				max_d = d - 1;
 		else
