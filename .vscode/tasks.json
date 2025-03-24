@@ -12,6 +12,11 @@
 			"label": "build ex01 test",
 			"type": "shell",
 			"command": "make -C ex01 debug_test"
+		},
+		{
+			"label": "build ex02 test",
+			"type": "shell",
+			"command": "make -C ex02 debug_test"
 		}
 	]
 }
