@@ -1,27 +1,41 @@
 #include "PmergeMe.hpp"
 
 #include <algorithm>
+#include <cmath>
 #include <cstddef>
+#include <cstring>
 
-static void pmergeme_recursive(std::vector<unsigned>& v, unsigned track);
+static void pmergeme_recursive(std::vector<unsigned>& v, std::size_t d_pos[], unsigned track);
 static void pairing(std::vector<unsigned>& v, unsigned track);
-static void insertion(std::vector<unsigned>& v, unsigned track, std::size_t b_len);
-static void binary_insertion(std::vector<unsigned>& v, unsigned track, std::size_t dtlb,
-							 size_t& blb, size_t& alb);
+static void insertion(std::vector<unsigned>& v, std::size_t d_pos[], unsigned track,
+					  std::size_t b_len);
+static void binary_insertion(std::vector<unsigned>& v, std::size_t d_pos[], unsigned track,
+							 std::size_t tb, std::size_t lb, std::size_t& blb);
 
-void pmergeme(std::vector<unsigned>& vec) {
-	pmergeme_recursive(vec, 1);
+void pmergeme(std::vector<unsigned>& vec) throw(std::bad_alloc) {
+	std::size_t* d_pos;
+	if (vec.size() > 2) {
+		std::size_t max_k = static_cast<std::size_t>(
+			std::ceil(std::log(vec.size() * 3.0l / 2) / std::log(2.0l)) - 1);
+		d_pos = new std::size_t[(((1ul << (max_k + 1)) + 1 - 2 * (max_k & 1)) / 3
+								 - ((1ul << (max_k)) + 1 - 2 * (max_k - 1 & 1)) / 3)
+									* 2
+								- 1];
+	} else
+		d_pos = NULL;
+	pmergeme_recursive(vec, d_pos, 1);
+	delete[] d_pos;
 }
 
-static void pmergeme_recursive(std::vector<unsigned>& v, unsigned track) {
+static void pmergeme_recursive(std::vector<unsigned>& v, std::size_t d_pos[], unsigned track) {
 	pairing(v, track);
 	track *= 2;
 	std::size_t b_len = v.size() / track;
 	if (b_len > 1)
-		pmergeme_recursive(v, track);
+		pmergeme_recursive(v, d_pos, track);
 	b_len += v.size() % track / (track / 2);
 	if (b_len > 1)
-		insertion(v, track, b_len);
+		insertion(v, d_pos, track, b_len);
 }
 
 static void pairing(std::vector<unsigned>& v, unsigned track) {
@@ -32,39 +46,52 @@ static void pairing(std::vector<unsigned>& v, unsigned track) {
 			std::swap_ranges(v.begin() + (i + 1 - track), v.begin() + (i + 1), v.begin() + (i + 1));
 }
 
-static void insertion(std::vector<unsigned>& v, unsigned track, std::size_t b_len) {
-	unsigned	k = 2;
+struct SteppingAssigner {
+	SteppingAssigner(std::size_t init, std::size_t step) : cur(init), step(step) {}
+
+	void operator()(std::size_t& el) {
+		el = cur;
+		cur += step;
+	}
+
+private:
+	std::size_t		  cur;
+	std::size_t const step;
+};
+
+static void insertion(std::vector<unsigned>& v, std::size_t d_pos[], unsigned track,
+					  std::size_t b_len) {
+	std::size_t k = 2;
 	std::size_t lb = 1;
 	std::size_t blb = 2;
+	unsigned	old_track = track / 2;
 
 	for (std::size_t t = 0; t < b_len; k += 1, lb = t) {
-		t = ((1u << (k + 1)) + 1 - 2 * (k & 1)) / 3;
+		t = ((1ul << (k + 1)) + 1 - 2 * (k & 1)) / 3;
 		if (t > b_len)
 			t = b_len;
-		std::size_t alb = 0;
+		std::for_each(d_pos, d_pos + (t - lb) * 2, SteppingAssigner((blb + 1) * old_track, track));
 		std::size_t lblb = blb;
+		std::size_t alb = 0;
 		for (std::size_t tb = t - 1; tb >= lb; tb -= 1)
-			binary_insertion(v, track, tb - lb, lblb, alb);
+			binary_insertion(v, d_pos, track, tb - lb);
 		blb += (alb + lblb - blb) * 2;
 	}
 }
 
-static void binary_insertion(std::vector<unsigned>& v, unsigned track, std::size_t dtlb,
-							 size_t& blb, size_t& alb) {
+static void binary_insertion(std::vector<unsigned>& v, std::size_t d_pos[], unsigned track,
+							 std::size_t tb, std::size_t lb, std::size_t& blb) {
 	unsigned						old_track = track / 2;
-	std::vector<unsigned>::iterator itb_b =
-		dtlb ? v.begin() + ((blb + alb) * old_track + dtlb * track) : v.begin() + blb * old_track;
+	std::vector<unsigned>::iterator itb_b = v.begin() + tb * track;
 	std::vector<unsigned>::iterator itb_e = itb_b + old_track;
 	unsigned const&					val = itb_b[old_track - 1];
-	if (itb_e > v.end())
-		itb_e = v.end();
-	std::size_t min_d = 0;
-	std::size_t max_d = dtlb ? blb + alb : blb - 1;	 // bug (may be alb is extra)
-	bool		gt;
-	bool		same = false;
+	std::size_t						min_d = 0;
+	std::size_t						max_d = tb + lb + blb;
+	bool							gt;
+	bool							same = false;
 	while (min_d != max_d) {
 		std::size_t		d = (min_d + max_d) / 2;
-		unsigned const& dv = v[(d + (d >= blb) + 1) * old_track - 1];
+		unsigned const& dv = v[d_pos[d]];
 		if (val <= dv)
 			if (d == min_d) {
 				same = true;
@@ -76,11 +103,9 @@ static void binary_insertion(std::vector<unsigned>& v, unsigned track, std::size
 			min_d = d + 1;
 	}
 	if (!same)
-		gt = val > v[(max_d + (max_d >= blb) + 1) * old_track - 1];
-	if (max_d > blb || (max_d == blb && gt))
-		alb += 1;
-	else
-		blb += 1;
-	std::vector<unsigned>::iterator ito = v.begin() + ((max_d + (max_d >= blb) + gt) * old_track);
+		gt = val > v[d_pos[max_d]];
+	if (max_d)
+		std::vector<unsigned>::iterator ito =
+			v.begin() + ((max_d + (max_d >= blb) + gt) * old_track);
 	std::rotate(ito, itb_b, itb_e);
 }
