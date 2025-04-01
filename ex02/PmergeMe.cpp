@@ -10,8 +10,8 @@ static void pairing(std::vector<unsigned>& v, unsigned track);
 static void insertion(std::vector<unsigned>& v, std::size_t d_pos[], unsigned track,
 					  std::size_t b_len);
 static void binary_insertion(std::vector<unsigned>& v, std::size_t d_pos[], unsigned track,
-							 std::size_t tb, std::size_t lb, std::size_t& a_len,
-							 std::size_t& d_len);
+							 std::vector<unsigned>::reverse_iterator rit_e, std::size_t tb,
+							 std::size_t lb, std::size_t& c_len, std::size_t& d_len);
 
 void pmergeme(std::vector<unsigned>& vec) throw(std::bad_alloc) {
 	std::size_t* d_pos;
@@ -71,9 +71,10 @@ static void insertion(std::vector<unsigned>& v, std::size_t d_pos[], unsigned tr
 			std::rotate(v.begin() + (tb * 2 - 1) * track, v.begin() + tb * 2 * track,
 						v.begin() + (tb * 2 + t - tb) * track);
 		std::for_each(d_pos, d_pos + t - lb, SteppingAssigner(lb, track));
-		std::size_t a_len = t - lb - 1;
+		std::size_t								c_len = t - lb - 1;
+		std::vector<unsigned>::reverse_iterator rit_e = v.rend() - (t * 2 - 1) * track;
 		for (std::size_t tb = t - 1; tb >= lb; tb -= 1)
-			binary_insertion(v, d_pos, track, tb, lb, a_len, d_len);
+			binary_insertion(v, d_pos, track, rit_e, tb, lb, c_len, d_len);
 	}
 }
 
@@ -88,10 +89,11 @@ private:
 
 static void binary_insertion(std::vector<unsigned>& v, std::size_t d_pos[], unsigned track,
 							 std::vector<unsigned>::reverse_iterator rit_e, std::size_t tb,
-							 std::size_t lb, std::size_t& a_len, std::size_t& d_len) {
+							 std::size_t lb, std::size_t& c_len, std::size_t& d_len) {
 	std::size_t		min_d = 0;
-	std::size_t		max_d = a_len + d_len;
-	unsigned const& val = ;
+	std::size_t		mc_len = c_len + d_len;
+	std::size_t		max_d = mc_len;
+	unsigned const& val = *(rit_e - (track - 1));
 	bool			gt;
 	bool			same = false;
 	while (min_d != max_d) {
@@ -109,10 +111,10 @@ static void binary_insertion(std::vector<unsigned>& v, std::size_t d_pos[], unsi
 	}
 	if (!same)
 		gt = val > v[d_pos[max_d]];
-	if (max_d < a_len || (max_d == a_len && !gt)) {
+	if (max_d < c_len || (max_d == c_len && !gt)) {
 		std::for_each(d_pos, d_pos + (tb - lb + 1), Adder(track));
-		a_len += 1;
-	}
+		c_len += 1;
+	} else if (max_d < mc_len || (max_d == mc_len))
 	// std::rotate(rit_b, rit_e, v.rend() - ())
 	/*
 	std::vector<unsigned>::iterator ito = v.begin() + ();
