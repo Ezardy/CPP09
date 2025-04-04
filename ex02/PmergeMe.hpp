@@ -6,5 +6,5 @@
 #include <vector>
 
 void pmergeme(std::vector<unsigned>& vec) throw(std::bad_alloc);
-void pmergeme(std::deque<unsigned>& deq);
+void pmergeme(std::deque<unsigned>& deq) throw(std::bad_alloc);
 #endif
