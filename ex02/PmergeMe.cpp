@@ -63,7 +63,6 @@ static void insertion(std::vector<unsigned>& v, std::size_t d_pos[], unsigned tr
 					  std::size_t b_len) {
 	std::size_t k = 2;
 	std::size_t lb = 1;
-	std::size_t c_len = 2;
 
 	for (std::size_t t = 0; t < b_len; k += 1, lb = t) {
 		t = ((1ul << (k + 1)) + 1 - 2 * (k & 1)) / 3;
@@ -73,6 +72,7 @@ static void insertion(std::vector<unsigned>& v, std::size_t d_pos[], unsigned tr
 			std::rotate(v.begin() + tb * 2 * track, v.begin() + (tb * 2 + 1) * track,
 						v.begin() + (tb + t) * track);
 		std::for_each(d_pos, d_pos + t - lb + 1, SteppingAssigner(lb * 2 * track, track * 2));
+		std::size_t								c_len = lb * 2;
 		std::size_t								d_len = t - lb - 1;
 		std::vector<unsigned>::reverse_iterator rit_b = v.rend() - ((t - 1) * 2 + 1) * track;
 		std::vector<unsigned>::reverse_iterator rit_e = rit_b + track;
