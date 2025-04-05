@@ -26,8 +26,8 @@ re: fclean all
 debug_test: cflags+=-g
 debug_test: test
 
-debug_btc: cflags+=-g
-debug_btc: PmergeMe
+debug_main: cflags+=-g
+debug_main: PmergeMe
 
 $(obj:.o=.d):
 -include $(obj:.o=.d)
