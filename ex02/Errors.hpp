@@ -1,0 +1,13 @@
+#ifndef EX02_ERRORS_HPP
+#define EX02_ERRORS_HPP
+
+enum Errors {
+	ERR_NO,
+	ERR_EMPTY_INPUT,
+	ERR_NUM_OUT_OF_RANGE,
+	ERR_IS_NOT_NUM,
+	ERR_MEM,
+	ERR_TIME
+};
+
+#endif
