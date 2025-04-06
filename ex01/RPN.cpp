@@ -26,15 +26,13 @@ char const* RPN::RPNException::what(void) const throw() {
 RPN::RPN(void) throw() {
 }
 
-RPN::RPN(RPN const& other) throw() {
-	(void)other;
+RPN::RPN(RPN const&) throw() {
 }
 
 RPN::~RPN(void) throw() {
 }
 
-RPN& RPN::operator=(RPN const& other) throw() {
-	(void)other;
+RPN& RPN::operator=(RPN const&) throw() {
 	return *this;
 }
 

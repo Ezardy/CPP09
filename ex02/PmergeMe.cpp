@@ -25,7 +25,7 @@ static void binary_insertion(std::deque<unsigned>& v, std::size_t d_pos[], unsig
 							 std::deque<unsigned>::reverse_iterator rit_e, std::size_t i,
 							 std::size_t& c_len, std::size_t& d_len);
 
-void pmergeme(std::vector<unsigned>& vec) throw(std::bad_alloc) {
+void PmergeMe::sort(std::vector<unsigned>& vec) throw(std::bad_alloc) {
 	std::size_t* d_pos;
 	if (vec.size() > 2) {
 		std::size_t max_k = static_cast<std::size_t>(
@@ -39,7 +39,7 @@ void pmergeme(std::vector<unsigned>& vec) throw(std::bad_alloc) {
 	delete[] d_pos;
 }
 
-void pmergeme(std::deque<unsigned>& deq) throw(std::bad_alloc) {
+void PmergeMe::sort(std::deque<unsigned>& deq) throw(std::bad_alloc) {
 	std::size_t* d_pos;
 	if (deq.size() > 2) {
 		std::size_t max_k = static_cast<std::size_t>(
@@ -227,4 +227,17 @@ static void binary_insertion(std::deque<unsigned>& v, std::size_t d_pos[], unsig
 	if (i)
 		d_len -= (d_pos[i] - d_pos[i - 1]) / track / 2;
 	std::rotate(rit_b, rit_e, v.rend() - (max_d - 1 + gt) * track);
+}
+
+PmergeMe::PmergeMe(void) throw() {
+}
+
+PmergeMe::PmergeMe(PmergeMe const&) throw() {
+}
+
+PmergeMe::~PmergeMe(void) throw() {
+}
+
+PmergeMe& PmergeMe::operator=(PmergeMe const&) throw() {
+	return *this;
 }

@@ -77,7 +77,7 @@ TEST_START(pmergeme_deque_15000)
 
 		std::generate(d.begin(), d.end(), UnsignedSequence());
 		std::random_shuffle(d.begin(), d.end());
-		pmergeme(d);
+		PmergeMe::sort(d);
 		TEST_ASSERT(is_sorted(d))
 	TEST_LOGIC_END
 	TEST_EMERGENCY_START
@@ -90,7 +90,7 @@ TEST_START(pmergeme_deque_nonunique)
 
 		std::generate(d.begin(), d.end(), UnsignedSequence(5));
 		std::random_shuffle(d.begin(), d.end());
-		pmergeme(d);
+		PmergeMe::sort(d);
 		TEST_ASSERT(is_sorted(d))
 	TEST_LOGIC_END
 	TEST_EMERGENCY_START
@@ -103,7 +103,7 @@ TEST_START(pmergeme_deque_21)
 
 		std::generate(d.begin(), d.end(), UnsignedSequence());
 		std::random_shuffle(d.begin(), d.end());
-		pmergeme(d);
+		PmergeMe::sort(d);
 		TEST_ASSERT(is_sorted(d))
 	TEST_LOGIC_END
 	TEST_EMERGENCY_START
@@ -118,7 +118,7 @@ TEST_START(pmergeme_deque_6)
 
 		do {
 			dt.assign(d.begin(), d.end());
-			pmergeme(dt);
+			PmergeMe::sort(dt);
 			TEST_ASSERT(is_sorted(dt))
 		} while (std::next_permutation(d.begin(), d.end()));
 	TEST_LOGIC_END
@@ -134,7 +134,7 @@ TEST_START(pmergeme_deque_5)
 
 		do {
 			dt.assign(d.begin(), d.end());
-			pmergeme(dt);
+			PmergeMe::sort(dt);
 			TEST_ASSERT(is_sorted(dt))
 		} while (std::next_permutation(d.begin(), d.end()));
 	TEST_LOGIC_END
@@ -150,7 +150,7 @@ TEST_START(pmergeme_deque_4)
 
 		do {
 			dt.assign(d.begin(), d.end());
-			pmergeme(dt);
+			PmergeMe::sort(dt);
 			TEST_ASSERT(is_sorted(dt))
 		} while (std::next_permutation(d.begin(), d.end()));
 	TEST_LOGIC_END
@@ -166,7 +166,7 @@ TEST_START(pmergeme_deque_3)
 
 		do {
 			dt.assign(d.begin(), d.end());
-			pmergeme(dt);
+			PmergeMe::sort(dt);
 			TEST_ASSERT(is_sorted(dt))
 		} while (std::next_permutation(d.begin(), d.end()));
 	TEST_LOGIC_END
@@ -182,7 +182,7 @@ TEST_START(pmergeme_deque_2)
 
 		do {
 			dt.assign(d.begin(), d.end());
-			pmergeme(dt);
+			PmergeMe::sort(dt);
 			TEST_ASSERT(is_sorted(dt))
 		} while (std::next_permutation(d.begin(), d.end()));
 	TEST_LOGIC_END
@@ -194,7 +194,7 @@ TEST_START(pmergeme_deque_1)
 	TEST_LOGIC_START
 		std::deque<unsigned>	d(1);
 		d[0] = 56;
-		pmergeme(d);
+		PmergeMe::sort(d);
 		TEST_ASSERT(is_sorted(d))
 	TEST_LOGIC_END
 	TEST_EMERGENCY_START
@@ -204,7 +204,7 @@ TEST_END
 TEST_START(pmergeme_deque_0)
 	TEST_LOGIC_START
 		std::deque<unsigned>	d;
-		pmergeme(d);
+		PmergeMe::sort(d);
 		TEST_ASSERT(d.empty())
 	TEST_LOGIC_END
 	TEST_EMERGENCY_START
@@ -217,7 +217,7 @@ TEST_START(pmergeme_vector_15000)
 
 		std::generate(v.begin(), v.end(), UnsignedSequence());
 		std::random_shuffle(v.begin(), v.end());
-		pmergeme(v);
+		PmergeMe::sort(v);
 		TEST_ASSERT(is_sorted(v))
 	TEST_LOGIC_END
 	TEST_EMERGENCY_START
@@ -230,7 +230,7 @@ TEST_START(pmergeme_vector_nonunique)
 
 		std::generate(v.begin(), v.end(), UnsignedSequence(5));
 		std::random_shuffle(v.begin(), v.end());
-		pmergeme(v);
+		PmergeMe::sort(v);
 		TEST_ASSERT(is_sorted(v))
 	TEST_LOGIC_END
 	TEST_EMERGENCY_START
@@ -243,7 +243,7 @@ TEST_START(pmergeme_vector_21)
 
 		std::generate(v.begin(), v.end(), UnsignedSequence());
 		std::random_shuffle(v.begin(), v.end());
-		pmergeme(v);
+		PmergeMe::sort(v);
 		TEST_ASSERT(is_sorted(v))
 	TEST_LOGIC_END
 	TEST_EMERGENCY_START
@@ -258,7 +258,7 @@ TEST_START(pmergeme_vector_6)
 
 		do {
 			vt.assign(v.begin(), v.end());
-			pmergeme(vt);
+			PmergeMe::sort(vt);
 			TEST_ASSERT(is_sorted(vt))
 		} while (std::next_permutation(v.begin(), v.end()));
 	TEST_LOGIC_END
@@ -274,7 +274,7 @@ TEST_START(pmergeme_vector_5)
 
 		do {
 			vt.assign(v.begin(), v.end());
-			pmergeme(vt);
+			PmergeMe::sort(vt);
 			TEST_ASSERT(is_sorted(vt))
 		} while (std::next_permutation(v.begin(), v.end()));
 	TEST_LOGIC_END
@@ -290,7 +290,7 @@ TEST_START(pmergeme_vector_4)
 
 		do {
 			vt.assign(v.begin(), v.end());
-			pmergeme(vt);
+			PmergeMe::sort(vt);
 			TEST_ASSERT(is_sorted(vt))
 		} while (std::next_permutation(v.begin(), v.end()));
 	TEST_LOGIC_END
@@ -306,7 +306,7 @@ TEST_START(pmergeme_vector_3)
 
 		do {
 			vt.assign(v.begin(), v.end());
-			pmergeme(vt);
+			PmergeMe::sort(vt);
 			TEST_ASSERT(is_sorted(vt))
 		} while (std::next_permutation(v.begin(), v.end()));
 	TEST_LOGIC_END
@@ -322,7 +322,7 @@ TEST_START(pmergeme_vector_2)
 
 		do {
 			vt.assign(v.begin(), v.end());
-			pmergeme(vt);
+			PmergeMe::sort(vt);
 			TEST_ASSERT(is_sorted(vt))
 		} while (std::next_permutation(v.begin(), v.end()));
 	TEST_LOGIC_END
@@ -334,7 +334,7 @@ TEST_START(pmergeme_vector_1)
 	TEST_LOGIC_START
 		std::vector<unsigned>	v(1);
 		v[0] = 56;
-		pmergeme(v);
+		PmergeMe::sort(v);
 		TEST_ASSERT(is_sorted(v))
 	TEST_LOGIC_END
 	TEST_EMERGENCY_START
@@ -344,7 +344,7 @@ TEST_END
 TEST_START(pmergeme_vector_0)
 	TEST_LOGIC_START
 		std::vector<unsigned>	v;
-		pmergeme(v);
+		PmergeMe::sort(v);
 		TEST_ASSERT(v.empty())
 	TEST_LOGIC_END
 	TEST_EMERGENCY_START
