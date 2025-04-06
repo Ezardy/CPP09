@@ -27,7 +27,7 @@ int main(int argc, char const* const* const argv) {
 				if (static_cast<long>(start) == -1)
 					error = ERR_TIME;
 				else {
-					pmergeme(v);
+					PmergeMe::sort(v);
 					std::clock_t end = std::clock();
 					if (static_cast<long>(end) == -1)
 						error = ERR_TIME;
@@ -41,7 +41,7 @@ int main(int argc, char const* const* const argv) {
 						if (static_cast<long>(start = std::clock()) == -1)
 							error = ERR_TIME;
 						else {
-							pmergeme(d);
+							PmergeMe::sort(d);
 							if (static_cast<long>(end = std::clock()) == -1)
 								error = ERR_TIME;
 							else

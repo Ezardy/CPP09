@@ -16,7 +16,7 @@ clean:
 	rm -f $(obj) $(obj:.o=.d)
 
 fclean: clean
-	rm -f test RPN
+	rm -f RPN
 
 re: fclean all
 
