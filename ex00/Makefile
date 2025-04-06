@@ -1,13 +1,10 @@
-all: test btc
+all: btc
 
-src=BitcoinExchange
+src=BitcoinExchange main
 obj=$(addsuffix .o, $(src))
 
-test: $(obj) test.o
-	c++ $(cflags) -o $@ $(obj) test.o
-
-btc: $(obj) main.o
-	c++ $(cflags) -o $@ $(obj) main.o
+btc: $(obj)
+	c++ $(cflags) -o $@ $(obj)
 
 cflags=-Wall -Wextra -Werror -std=c++98
 depflags = -MT $@ -MMD -MP -MF $*.d
@@ -16,22 +13,15 @@ depflags = -MT $@ -MMD -MP -MF $*.d
 	c++ $(cflags) $(depflags) -o $@ -c $<
 
 clean:
-	rm -f $(obj) $(obj:.o=.d) main.o main.d test.o test.d
+	rm -f $(obj) $(obj:.o=.d)
 
 fclean: clean
-	rm -f test btc
+	rm -f btc
 
 re: fclean all
-
-debug_test: cflags+=-g
-debug_test: test
 
 debug_btc: cflags+=-g
 debug_btc: btc
 
 $(obj:.o=.d):
 -include $(obj:.o=.d)
-main.d:
--include main.d
-test.d:
--include test.d
